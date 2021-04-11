@@ -6,7 +6,7 @@
         <img
           style="height:60px"
         />
-        <span>江西仪器网后台管理系统</span>
+        <span>精选购后台管理系统</span>
       </div>
       <el-button
         type="info"
@@ -77,7 +77,7 @@ export default {
   data () {
     return {
       menuList: [
-		  {id:1,  authName: '用户管理',children: [{id:4, path:'users', authName: '用户列表'}]},
+		  {id:1,  authName: '用户管理',children: [{id:4, path:'admin', authName: '管理员'},{id:11, path:'users', authName: '普通用户'}]},
 		  {id:2,  authName: '商品管理',children: [{id:5, path:'goods', authName: '商品列表'}]},
 		  {id:3,  authName: '订单管理',children: [{id:6, path:'order', authName: '订单列表'}]},
 		  {id:4,  authName: '系统设置',children: [

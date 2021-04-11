@@ -8,7 +8,7 @@ let DEV_URL = ''
 let PROD_URL = ''
 
 if (process.env.NODE_ENV === 'development') {
-    DEV_URL = 'https://binbin-dev.bcjgy.com/'
+    DEV_URL = 'http://localhost:8081/'
 }
 if (process.env.NODE_ENV === 'development'){
     PROD_URL = 'https://binbin-dev.bcjgy.com/'

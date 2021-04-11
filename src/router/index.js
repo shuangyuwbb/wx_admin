@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '../views/home.vue'
 import User from '../components/user/users.vue'
+import Admin from '../components/user/admin.vue'
 import GoodsList from '../components/goods/goodsList.vue'
 import Notice from '../components/catagory/notice.vue'
 import Aboutus from '../components/catagory/aboutus.vue'
@@ -25,6 +26,7 @@ const router = new Router({
 		component: Home,
 		children: [
 			{path: '/', component: User},
+			{path: '/admin', component: Admin},
 			{path: '/users', component: User},
 			{path: '/goods', component: GoodsList},
 			{path: '/order', component: OrderList},

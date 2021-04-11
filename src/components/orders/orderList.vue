@@ -44,15 +44,6 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			
-			<!-- 分页 -->
-			<el-pagination 
-			background 
-			@current-change="handleChange" 
-			layout="prev, pager, next" 
-			:page-size=5 
-			:total="total">
-			</el-pagination>
 			<!-- 修改价格 -->
 			<!-- 添加商品弹出框 -->
 			<el-dialog title="修改价格" :visible.sync="dialogFormVisible">
@@ -106,12 +97,6 @@
 					this.orderList = res.data.list
 					this.total = res.data.total
 				}
-			},
-			
-			// 分页
-			handleChange(pageNum){
-				this.currentPage = pageNum
-				this.getOrederList(pageNum)
 			},
 			
 			// 取消订单

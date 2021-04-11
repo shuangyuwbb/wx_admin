@@ -13,15 +13,20 @@
 				<el-col :span="5">
 					<el-select @change="changeParentCatagory" v-model="valueParent" loading-text filterable allow-create
 					 default-first-option placeholder="选择父级分类">
-						<el-option v-for="item in parentsCatagories" :key="item.id" :label="item.name" :value="item.id">
+						<el-option v-for="item in categoryv1" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
 					</el-select>
 				</el-col>
 				<!-- 下拉子级目录搜索框  -->
 				<el-col :span="5">
-					<el-select @change="changeChildCatagory" v-model="valueChild" loading-text filterable allow-create
-					 default-first-option placeholder="选择子级分类">
-						<el-option v-for="item in childCatagories" :key="item.id" :label="item.name" :value="item.id">
+					<el-select @change="changeChildCatagory"
+							   v-model="valueChild"
+							   loading-text
+							   filterable
+							   allow-create
+							   default-first-option
+							   placeholder="选择子级分类">
+						<el-option v-for="item in categoryv2" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
 					</el-select>
 				</el-col>
@@ -33,16 +38,16 @@
 			</el-row>
 
 			<!-- 商品列表 -->
-			<el-table :data="goodsList" border style="width: 100%">
+			<el-table :data="goodsList" border style="width: 100%; height: calc(100vh - 260px); overflow-y: scroll">
 				<el-table-column prop="id" label="#" width="60" />
 				<el-table-column prop="subtitle" label="商品名称" width="180"></el-table-column>
-				<el-table-column prop="cName" label="商品分类" width="180"></el-table-column>
-				<el-table-column prop="mName" label="生产厂家"></el-table-column>
+				<el-table-column prop="title" label="商品分类" width="180"></el-table-column>
 				<el-table-column prop="price" label="价格" width="80px"></el-table-column>
-				<el-table-column prop="image" label="图片" width="80px">
+				<el-table-column prop="discount_price" label="折扣价格" width="80px"></el-table-column>
+				<el-table-column prop="main_image" label="图片" width="80px">
 					<!-- 商品图片处理 -->
 					<template v-slot="scope">
-						<img style="width: 100%;height: 3.125rem" :src=scope.row.image alt="">
+						<img style="width: 100%;height: 3.125rem" :src=scope.row.main_image alt="">
 					</template>
 				</el-table-column>
 				<el-table-column prop="status" label="状态" width="80px">
@@ -71,6 +76,9 @@
 						<el-input v-model="updateData.subtitle" :value="updateData.subtitle" style="width: 218px;"></el-input>
 					</el-form-item>
 					<el-form-item label="商品价格" label-width="120" prop="price" >
+						<el-input v-model="updateData.price" :value="updateData.price" style="width: 218px;"></el-input>
+					</el-form-item>
+					<el-form-item label="商品价格" label-width="120" prop="discount_price" >
 						<el-input v-model="updateData.price" :value="updateData.price" style="width: 218px;"></el-input>
 					</el-form-item>
 					<el-form-item label="商品描述" label-width="120">
@@ -105,14 +113,20 @@
 			<el-dialog title="添加商品" :visible.sync="dialogFormVisible">
 				<el-form :model="addData" :rules="rules" ref="addGoodsRef">
 
-					<el-form-item label="商品名称" label-width="120" prop="subtitle">
+					<el-form-item label="商品简称" label-width="120" prop="subtitle">
 						<el-input v-model="addData.subtitle" style="width: 218px;"></el-input>
 					</el-form-item>
 					<el-form-item label="商品价格" label-width="120" prop="price">
 						<el-input v-model="addData.price" style="width: 218px;"></el-input>
 					</el-form-item>
+					<el-form-item label="折扣价格" label-width="120" prop="price">
+						<el-input v-model="addData.discount_price" style="width: 218px;"></el-input>
+					</el-form-item>
+					<el-form-item label="商品类型" label-width="120">
+						<el-input v-model="addData.title" style="width: 218px;" type="textarea"></el-input>
+					</el-form-item>
 					<el-form-item label="商品描述" label-width="120">
-						<el-input v-model="addData.descs" style="width: 218px;" type="textarea"></el-input>
+						<el-input v-model="addData.name" style="width: 218px;" type="textarea"></el-input>
 					</el-form-item>
 					<el-form-item label="商品图片" label-width="120">
 						<el-upload class="upload-demo" action="http://jxs17.com/api/admin/upload" :headers="myheader" :file-list="fileList3" :limit="1"
@@ -121,16 +135,8 @@
 							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
 						</el-upload>
 					</el-form-item>
-					<el-form-item label="生产厂家" label-width="120" prop="manufactorId">
-						<el-select v-model="addData.manufactorId" placeholder="请选择所生产产品类别">
-							<el-option v-for="(item,index) in manufactors" :key="index" :label="item.name" :value="item.id"></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="商品排序" label-width="120">
-						<el-input v-model="addData.sorted_order" style="width: 218px;"></el-input>
-					</el-form-item>
-					<el-form-item label="商品参数" label-width="120">
-						<el-input v-model="addData.param" style="width: 218px;" type="textarea"></el-input>
+					<el-form-item label="商品热度" label-width="120">
+						<el-input v-model="addData.hot" style="width: 218px;"></el-input>
 					</el-form-item>
 				</el-form>
 
@@ -139,20 +145,18 @@
 					<el-button type="primary" @click="addGoodsForm">确 定</el-button>
 				</div>
 			</el-dialog>
-
-			<!-- 分页 -->
-			<el-pagination background @current-change="getPageData" layout="prev, pager, next" :page-size=4 :total="total">
-			</el-pagination>
 		</el-card>
 	</div>
 </template>
 
 <script>
-	
+	import {getCategory1,
+		getCategory2,
+		getGoodsLists,
+		goodsAdd} from './../../api/index'
 	export default {
 		data() {
 			return {
-			
 				// 商品列表
 				goodsList: [],
 				// 修改商品表单
@@ -160,22 +164,14 @@
 				// 增加商品表单
 				addData: {},
 				// 父级分类列表
-				parentsCatagories: [],
+				categoryv1: [],
 				// 子级目录
-				childCatagories: [],
-				// 厂家列表
-				manufactors: [],
+				categoryv2: [],
 				// 添加修改弹出框
 				dialogFormVisible: false,
 				dialogFormVisibleUpdate: false,
-				valueParent: '',
-				valueChild: '',
-				pageCurrent: 1,
 				// 上传图片列表
 				fileList3: [],
-				// 分页总数
-				total: 0,
-				myheader:{},
 								
 				// 校验
 				rules: {
@@ -193,66 +189,29 @@
 					}]
 				}
 			}
-
 		},
 		mounted() {
-			this.getParentsCatagories()
-			this.myheader={
-				Authorization: sessionStorage.getItem('token')
-				}
+			this.loadCatagoriev1()
 		},
 		methods: {
-			// 获取商品
-			async getGoodsList(pageNum = 1, id = 2, pageSize = 4) {
-				let res = await this.$http.get(`admin/product?categoryId=${id}&pageNum=${pageNum}&pageSize=${pageSize}`)
-				this.total = res.data.data.total
-				this.goodsList = res.data.data.list
-				this.addData.categoryId = id
-			},
 
 			// 获取父级分类
-			async getParentsCatagories() {
-				let res = await this.$http.get('/')
-				// 父级分类列表
-				this.parentsCatagories = res.data.data.categories
-				// 厂家列表
-				let manufactors = res.data.data.manufactors
-				// 保存父级分类到本地
-				manufactors.forEach(v => {
-					v.manufactors.forEach(m => {
-						this.manufactors.push(m)
-					})
-				})
-				sessionStorage.setItem('parentsCatagories', JSON.stringify(this.parentsCatagories))
-				// sessionStorage.setItem('manufactors', JSON.stringify(this.manufactors))
+			async loadCatagoriev1() {
+				this.categoryv1 = await getCategory1()
 			},
 
 			// 监听父级分类选框
-			changeParentCatagory(id) {
-				this.valueParent = id
-				this.parentsCatagories.forEach(v => {
-					if (v.id === id) {
-						this.childCatagories = v.subCategories
-					}
-				})
+			async changeParentCatagory(id) {
+				this.categoryv2 = await getCategory2({id})
 			},
 
 			// 监听子级分类选狂
-			changeChildCatagory(id) {
-				
-				this.valueChild = id
-				this.getGoodsList(this.pageCurrent, id)
-				// 将表单分类id置为所选
-				this.addData.categoryId = id
-				this.updateData.categoryId = id
+			changeChildCatagory() {
+				this.loadGoodsList()
 			},
 
-			// 分页
-			getPageData(pageNum) {
-				
-				this.pageCurrent = pageNum
-				let id = this.valueChild
-				this.getGoodsList(pageNum, id)
+			async loadGoodsList(){
+				this.goodsList = await getGoodsLists({id: this.valueChild})
 			},
 			
 			// 上传图片成功之后的回调
@@ -264,14 +223,11 @@
 			// 添加商品
 			async addGoodsForm() {
 				this.$refs.addGoodsRef.validate(async (valid)=>{
-					if (!valid) { return }
-					let res = await this.$http.post('/admin/product', this.addData)
+					if (!valid) return
+					this.addData.category_id = this.valueChild
+					await goodsAdd(this.addData)
 					this.dialogFormVisible = false
-					if (res.data !== undefined) {
-						this.$http.get('/admin/importAll')
-						this.getGoodsList(this.pageCurrent, this.valueChild)
-						return this.$message.success(res.data.msg)
-					}
+					this.loadGoodsList()
 				})
 				
 			},
@@ -289,7 +245,6 @@
 
 			// 修改商品看，
 			updateGoods(e) {
-				
 				this.updateData = e
 				this.dialogFormVisibleUpdate = true
 			},
