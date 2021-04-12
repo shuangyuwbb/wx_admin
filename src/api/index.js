@@ -29,4 +29,6 @@ export const getOrders = params => http.get(env.DEV_URL + 'admin/order/list', pa
 
 export const updateOrder = params => http.post(env.DEV_URL + 'admin/order/update', params)
 
+export const login = params => http.post(env.DEV_URL + 'admin/user/login', params)
+
 

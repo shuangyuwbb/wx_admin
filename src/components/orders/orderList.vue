@@ -13,13 +13,13 @@
 						<el-button slot="append" icon="el-icon-search" @click="getOrderOne" />
 					</el-input>
 				</el-col>
-			
+
 			</el-row>
-			
+
 			<!-- 订单列表 -->
-			<el-table 
-			border 
-			:data="orderList" 
+			<el-table
+			border
+			:data="orderList"
 			style="width: 100%"
 			:cell-style="cellStyle">
 				<el-table-column prop="orderNo" label="订单号" width="180" />
@@ -52,19 +52,20 @@
 						<el-input v-model="updatePrice.price" style="width: 218px;"></el-input>
 					</el-form-item>
 				</el-form>
-			
+
 				<div slot="footer" class="dialog-footer">
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
 					<el-button type="primary" @click="submitUpdatePrice">确 定</el-button>
 				</div>
 			</el-dialog>
-			
+
 		</el-card>
 
 	</div>
 </template>
 
 <script>
+import {getOrders, updateOrder} from './../../api/index'
 	export default {
 		data() {
 			return {
@@ -72,7 +73,6 @@
 				orderNo: '',
 				orderOne: '',
 				orderList: [],
-				currentPage: 1,
 				updatePrice: {},
 				dialogFormVisible: false,
 				// 校验
@@ -85,52 +85,34 @@
 			}
 		},
 		mounted() {
-			this.getOrederList(this.currentPage)
+			this.getOrederList()
 		},
 		methods: {
 			// 获取所有订单
-			async getOrederList(pageNum) {
-				let {
-					data: res
-				} = await this.$http.get(`/admin/order?pageNum=${pageNum}&pageSize=5`)
-				if (res.status == 0) {
-					this.orderList = res.data.list
-					this.total = res.data.total
-				}
+			async getOrederList() {
+        this.orderList = await getOrders()
 			},
-			
+
 			// 取消订单
 			async handleCancel(e){
 				let orderNo = e.orderNo
-				let {data: res} = await this.$http.patch(`/admin/order/${orderNo}`)
-				console.log(res)
-				if(res.status !== 0){
-					return this.$message.error(res.msg)
-				}
-				this.getOrederList(this.currentPage)
+				let res= await updateOrder({orderNo})
+				this.getOrederList()
 				return this.$message.success('订单已取消！')
 			},
-			
+
 			// 搜索订单
 			async getOrderOne(){
-				this.orderList = []
-				if(this.orderNo == ''){
-					this.getOrederList(this.currentPage)
-				}else{
-					let {data: res} = await this.$http.get(`/admin/orderOne?orderNo=${this.orderNo}`)
-					if(res.status == 0){
-						this.orderList.push(res.data)
-						return
-					}
-				}
+				if(this.orderNo === '') return
+        this.orderList = await updateOrder({orderNo})
 			},
-			
+
 			// 修改价格
 			handleUpdate(e){
 				this.updatePrice.orderNo = e.orderNo
-				this.dialogFormVisible = true		
+				this.dialogFormVisible = true
 			},
-			
+
 			// 提交修改
 			async submitUpdatePrice(){
 				this.$refs.priceRef.validate(async (valid)=>{
@@ -144,7 +126,7 @@
 					return this.$message.success('修改成功！！')
 				})
 			},
-			
+
 			//列样式
 			cellStyle(data){
 				if(data.columnIndex === 4&& data.row.status === 0){

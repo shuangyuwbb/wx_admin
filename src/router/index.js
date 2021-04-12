@@ -39,10 +39,10 @@ const router = new Router({
 })
 // 挂在路由导航守卫
 router.beforeEach((to, from, next) => {
-  // if (to.path == '/login') return next()
-  // // 获取token
-  // const token = window.sessionStorage.getItem('token')
-  // if (!token) return next('/login')
+  if (to.path == '/login') return next()
+  // 获取token
+  const token = window.sessionStorage.getItem('token')
+  if (!token) return next('/login')
   next()
 })
 
