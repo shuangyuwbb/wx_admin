@@ -75,9 +75,6 @@
           <el-form-item label="商品名称" prop="subtitle">
             <el-input v-model="updateData.subtitle"></el-input>
           </el-form-item>
-          <el-form-item label="商品价格" prop="price">
-            <el-input v-model="updateData.price"></el-input>
-          </el-form-item>
           <el-form-item label="打折价格" prop="discount_price">
             <el-input v-model="updateData.discount_price"></el-input>
           </el-form-item>
@@ -85,8 +82,8 @@
             <el-input v-model="updateData.name" type="textarea"></el-input>
           </el-form-item>
           <el-form-item label="商品图片">
-            <el-upload class="upload-demo" :on-success="handleSuccess" action="http://jxs17.com/api/admin/upload"
-                       name="img"
+            <el-upload class="upload-demo" :on-success="handleSuccess" action="http://binbin-dev.bcjgy.com/admin/goods/upload"
+                       name="file"
                        :file-list="fileList3">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -121,14 +118,17 @@
             <el-input v-model="addData.name" type="textarea"></el-input>
           </el-form-item>
           <el-form-item label="商品图片" >
-            <el-upload class="upload-demo" action="http://jxs17.com/api/admin/upload" :file-list="fileList3" :limit="1"
-                       name="img" :on-success="handleSuccess">
+            <el-upload class="upload-demo" action="http://binbin-dev.bcjgy.com/admin/goods/upload" :file-list="fileList3" :limit="1"
+                       name="file" :on-success="handleSuccess">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="商品热度">
             <el-input v-model="addData.hot"></el-input>
+          </el-form-item>
+          <el-form-item label="库存">
+            <el-input v-model="addData.stock"></el-input>
           </el-form-item>
         </el-form>
 
@@ -146,8 +146,11 @@ import {
   getCategory1,
   getCategory2,
   getGoodsLists,
-  goodsAdd
+  goodsAdd,
+  goodsUpdate,
+  goodsUpdateStatus
 } from './../../api/index'
+import Login from "../../views/Login";
 
 export default {
   data() {
@@ -212,8 +215,8 @@ export default {
 
     // 上传图片成功之后的回调
     handleSuccess(e) {
-      this.addData.image = e.data
-      this.updateData.image = e.data
+      this.addData.main_image = e.mdImg
+      this.updateData.main_image = e.mdImg
     },
 
     // 添加商品
@@ -221,6 +224,7 @@ export default {
       this.$refs.addGoodsRef.validate(async (valid) => {
         if (!valid) return
         this.addData.category_id = this.valueChild
+        console.log(this.addData)
         await goodsAdd(this.addData)
         this.dialogFormVisible = false
         this.loadGoodsList()
@@ -246,31 +250,26 @@ export default {
     },
 
     //提交商品表单
-    async updateDataForm() {
+    updateDataForm() {
       this.$refs.updateGoodsRef.validate(async valid => {
-        if (!valid) {
-          return
-        }
-        let res = await this.$http.patch('/admin/product', this.updateData)
-        this.dialogFormVisibleUpdate = false
-        if (res.data.msg) {
-          this.getGoodsList(this.pageCurrent, this.valueChild)
-          return this.$message.success(res.data.msg)
-        }
+        if (!valid) return
+        await goodsUpdate(this.updateData)
+        this.loadGoodsList()
+        this.$message.success('更新成功！')
       })
     },
 
     // 更改状态
     async userStateChange(e) {
-      let data = {
+      console.log(e)
+      let status = e.status === 1 ? 1 : 0
+      let updateForm = {
         id: e.id,
-        status: !e.status
+        status: !status
       }
-      let res = await this.$http.patch('/admin/product', data)
-      if (res.data.msg) {
-        this.getGoodsList(this.pageCurrent, this.valueChild)
-        return this.$message.success(res.data.msg)
-      }
+      await goodsUpdateStatus(updateForm)
+      this.loadGoodsList()
+      return this.$message.success('更新成功！')
     }
 
   }

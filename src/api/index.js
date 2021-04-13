@@ -25,6 +25,10 @@ export const getGoodsLists = params => http.get(env.DEV_URL + 'admin/goods/lists
 
 export const goodsAdd = params => http.post(env.DEV_URL + 'admin/goods/add', params)
 
+export const goodsUpdate = params => http.post(env.DEV_URL + 'admin/goods/update', params)
+
+export const goodsUpdateStatus = params => http.post(env.DEV_URL + 'admin/goods/updateStatus', params)
+
 export const getOrders = params => http.get(env.DEV_URL + 'admin/order/list', params)
 
 export const updateOrder = params => http.post(env.DEV_URL + 'admin/order/update', params)
