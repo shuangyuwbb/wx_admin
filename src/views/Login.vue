@@ -260,9 +260,10 @@ export default {
     // 发送登陆请求
     async submitLogin() {
       const res = await login(this.Login_Form)
-      console.log(res)
       if(res){
         window.sessionStorage.setItem('token', res.token)
+        window.sessionStorage.setItem('username', res.username)
+        window.sessionStorage.setItem('avatar', res.avatar)
         this.$router.push('home')
       }else{
         this.$message.error('用户名或密码错误！')

@@ -35,4 +35,14 @@ export const updateOrder = params => http.post(env.DEV_URL + 'admin/order/update
 
 export const login = params => http.post(env.DEV_URL + 'admin/user/login', params)
 
+export const categoryList = params => http.get(env.DEV_URL + 'admin/goods/category', params)
+
+export const categoryUpdate = params => http.post(env.DEV_URL + 'admin/goods/category/update', params)
+
+export const categoryDelete = params => http.delete(env.DEV_URL + 'admin/goods/category', params)
+
+export const categoryAdd = params => http.post(env.DEV_URL + 'admin/goods/category', params)
+
+
+
 

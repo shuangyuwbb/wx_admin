@@ -38,9 +38,9 @@
       </el-row>
 
       <!-- 商品列表 -->
-      <el-table :data="goodsList" border style="width: 100%; height: calc(100vh - 260px); overflow-y: scroll">
+      <el-table :data="goodsList" border style="height: calc(100vh - 260px); overflow-y: scroll">
         <el-table-column prop="id" label="#" width="60"/>
-        <el-table-column prop="subtitle" label="商品名称" width="180"></el-table-column>
+        <el-table-column prop="subtitle" label="商品名称"></el-table-column>
         <el-table-column prop="title" label="商品分类" width="180"></el-table-column>
         <el-table-column prop="price" label="价格" width="80px"></el-table-column>
         <el-table-column prop="discount_price" label="折扣价格" width="80px"></el-table-column>
@@ -60,9 +60,6 @@
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
-            <!-- 新增按钮 -->
-            <!-- <el-button type="primary" icon="el-icon-circle-plus" size="mini" @click="dialogFormVisible = true" /> -->
-            <!-- 修改按钮 -->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="updateGoods(scope.row)"/>
             <!-- 删除按钮 -->
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeGoods(scope.row)"/>

@@ -52,6 +52,17 @@
           <el-form-item label="密码" prop="password">
             <el-input v-model="addUserForm.password" type="password" style="width: 218px;"></el-input>
           </el-form-item>
+          <el-form-item label="头像">
+            <el-upload
+                class="avatar-uploader"
+                action="http://binbin-dev.bcjgy.com/admin/user/upload"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
@@ -66,6 +77,17 @@
           </el-form-item>
           <el-form-item label="密码" prop="password">
             <el-input v-model="updateForm.password" type="password" style="width: 218px;"></el-input>
+          </el-form-item>
+          <el-form-item label="头像">
+            <el-upload
+                class="avatar-uploader"
+                action="http://binbin-dev.bcjgy.com/admin/user/upload"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -93,7 +115,7 @@ export default {
       updateForm: {},
       dialogFormVisibleAdd: false,
       dialogFormVisibleUpdate: false,
-
+      imageUrl: '',
       // 校验
       rules: {
         username: [{
@@ -180,10 +202,32 @@ export default {
       let res = await searchUser(params)
       console.log(res)
       this.userList = res
+    },
+
+    handleAvatarSuccess(res, file){
+      this.updateForm.avatar = res.mdImg
+      this.addUserForm.avatar = res.mdImg
+      this.imageUrl = URL.createObjectURL(file.raw);
     }
   }
 }
 </script>
 
-<style>
+<style lang="less">
+.avatar-uploader{
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  i{
+    width: 100%;
+    height: 100%;
+    line-height: 100px;
+  }
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
 </style>
