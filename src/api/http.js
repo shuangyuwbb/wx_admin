@@ -4,8 +4,7 @@
  @Version: 1.0
  */
 import axios from 'axios'
-// import env from '../constants/env'
-
+import {Message} from 'element-ui'
 
 // axios.defaults.withCredentials = true
 // axios.withCredentials = true
@@ -14,20 +13,22 @@ var service = axios.create({
     timeout: 10000
 })
 
-service.interceptors.request.use(function (request) {
-    // store.commit('changeRateLoading', true)
-    return request
+axios.interceptors.request.use(config => {
+    // 在最后必须return config
+    config.headers.Authorization = window.sessionStorage.getItem('token')
+    return config
 })
-
 service.interceptors.response.use(function (response) {
     const {status} = response.data
     if (Object.is(status, 0)) {
+        if(response.data.msg) Message.success(response.data.msg)
         return response.data.data
-    } else if (Object.is(status, 200)) {
+    } else if (Object.is(status, -1)) {
+        if(response.data.msg) Message.error(response.data.msg)
         return response.data
     } else if (Object.is(status, undefined)) {
         return response.data
-    } else if (Object.is(status, -466)) { // 游客点评特殊处理
+    } else if (Object.is(status, -466)) {
         return response.data
     }else{
         return response.data.data
@@ -39,13 +40,11 @@ service.interceptors.response.use(function (response) {
 
 class http {
     static async get(url, params) {
-        let res = await service.get(url, {params})
-        return res
+        return await service.get(url, {params})
     }
 
     static async post(url, params) {
-        let res = await service.post(url, params)
-        return res
+        return await service.post(url, params)
     }
 }
 

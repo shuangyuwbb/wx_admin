@@ -156,10 +156,9 @@ export default {
 
     // 更改用户状态
     async userStateChange(e) {
-      let status = e.status === 1 ? 1 : 0
       let updateForm = {
         id: e.id,
-        status: !status
+        status: !e.status
       }
       await updateUser(updateForm)
       this.loadUserList()

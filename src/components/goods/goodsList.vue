@@ -53,7 +53,7 @@
         <el-table-column prop="status" label="状态" width="80px">
           <template slot-scope="scope">
             <el-switch
-                v-model="scope.row.status==1"
+                v-model="scope.row.status===1"
                 @change="userStateChange(scope.row)"
             />
           </template>
@@ -252,21 +252,19 @@ export default {
         if (!valid) return
         await goodsUpdate(this.updateData)
         this.loadGoodsList()
-        this.$message.success('更新成功！')
+        this.dialogFormVisibleUpdate = false
       })
     },
 
     // 更改状态
     async userStateChange(e) {
-      console.log(e)
-      let status = e.status === 1 ? 1 : 0
       let updateForm = {
         id: e.id,
-        status: !status
+        status: !e.status
       }
       await goodsUpdateStatus(updateForm)
       this.loadGoodsList()
-      return this.$message.success('更新成功！')
+      this.dialogFormVisibleUpdate = false
     }
 
   }
