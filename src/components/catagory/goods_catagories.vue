@@ -7,8 +7,8 @@
 		</el-breadcrumb>
 		<el-card>
 			<!-- 父级分类，添加分类 -->
-			<el-row :gutter="20">
-				<el-col :span="5">
+			<div class="jx-row">
+				<div>
 					<el-select @change="changeParentCatagory" v-model="valueParent" loading-text filterable allow-create
 					 default-first-option placeholder="选择父级分类">
 						<el-option
@@ -19,18 +19,18 @@
 						 <i @click="deleteParentCategory(item.id)" style="float: right; color: #8492a6; font-size: 13px;margin-top: 0.625rem;" class="el-icon-error"></i>
 						</el-option>
 					</el-select>
-				</el-col>
-				<el-col :span="3">
+				</div>
+				<div>
 					<el-button type="primary" @click="dialogFormVisibleParent = true">
 						添加父级分类
 					</el-button>
-				</el-col>
-				<el-col :span="1">
+				</div>
+				<div>
 					<el-button type="primary" :disabled="valueParent === '' " @click="dialogFormVisibleAddChild = true">
 						添加子级分类
 					</el-button>
-				</el-col>
-			</el-row>
+				</div>
+			</div>
 			<el-table :data="childCatagories" border>
 				<el-table-column align="center" type="index" label="#" width="80"/>
 				<el-table-column align="center" prop="id" label="分类id" width="80" />
@@ -264,5 +264,12 @@ export default {
 .ads{
   width: 90%;
   height: 90%;
+}
+.jx-row{
+  display: flex;
+  justify-content: flex-start;
+  >div{
+    margin-right: 10px;
+  }
 }
 </style>

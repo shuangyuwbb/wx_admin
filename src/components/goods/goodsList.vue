@@ -8,17 +8,17 @@
     </el-breadcrumb>
     <el-card>
       <!-- 下拉框 -->
-      <el-row :gutter="18">
+      <div class="jx-row">
         <!-- 下拉父级目录-->
-        <el-col :span="5">
+        <div>
           <el-select @change="changeParentCatagory" v-model="valueParent" loading-text filterable allow-create
                      default-first-option placeholder="选择父级分类">
             <el-option v-for="item in categoryv1" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
-        </el-col>
+        </div>
         <!-- 下拉子级目录搜索框  -->
-        <el-col :span="5">
+        <div>
           <el-select @change="changeChildCatagory"
                      v-model="valueChild"
                      loading-text
@@ -29,28 +29,42 @@
             <el-option v-for="item in categoryv2" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
-        </el-col>
-        <el-col :span="2">
+        </div>
+        <div>
           <el-button type="primary" :disabled="valueChild ==''" @click="dialogFormVisible = true">
             添加商品
           </el-button>
-        </el-col>
-      </el-row>
+        </div>
+        <el-dropdown class="jx-btn">
+          <el-button icon="el-icon-s-grid" type="primary">
+            <i class="el-icon-arrow-down"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item><el-checkbox v-model="show.name">商品名称</el-checkbox></el-dropdown-item>
+            <el-dropdown-item><el-checkbox v-model="show.category">商品分类</el-checkbox></el-dropdown-item>
+            <el-dropdown-item><el-checkbox v-model="show.price">价格</el-checkbox></el-dropdown-item>
+            <el-dropdown-item><el-checkbox v-model="show.discount">折扣价格</el-checkbox></el-dropdown-item>
+            <el-dropdown-item><el-checkbox v-model="show.image">图片</el-checkbox></el-dropdown-item>
+            <el-dropdown-item><el-checkbox v-model="show.status">状态</el-checkbox></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
       <!-- 商品列表 -->
       <el-table :data="goodsList" border style="height: calc(100vh - 260px); overflow-y: scroll">
         <el-table-column prop="id" label="#" width="60"/>
-        <el-table-column prop="subtitle" label="商品名称"></el-table-column>
-        <el-table-column prop="title" label="商品分类" width="180"></el-table-column>
-        <el-table-column prop="price" label="价格" width="80px"></el-table-column>
-        <el-table-column prop="discount_price" label="折扣价格" width="80px"></el-table-column>
-        <el-table-column prop="main_image" label="图片" width="80px">
+        <el-table-column prop="index" label="序号" width="60"/>
+        <el-table-column v-if="show.name" prop="subtitle" label="商品名称"></el-table-column>
+        <el-table-column v-if="show.category" prop="title" label="商品分类" width="180"></el-table-column>
+        <el-table-column v-if="show.price" prop="price" label="价格" width="80px"></el-table-column>
+        <el-table-column v-if="show.discount" prop="discount_price" label="折扣价格" width="80px"></el-table-column>
+        <el-table-column v-if="show.image" prop="main_image" label="图片" width="80px">
           <!-- 商品图片处理 -->
           <template v-slot="scope">
             <img style="width: 100%;height: 3.125rem" :src=scope.row.main_image alt="">
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="80px">
+        <el-table-column v-if="show.status" prop="status" label="状态" width="80px">
           <template slot-scope="scope">
             <el-switch
                 v-model="scope.row.status===1"
@@ -183,6 +197,14 @@ export default {
           required: true,
           message: "厂家不能为空哦！"
         }]
+      },
+      show:{
+        name: true,
+        category: true,
+        price: true,
+        discount: true,
+        image: true,
+        status: true
       }
     }
   },
@@ -271,5 +293,23 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="less">
+.el-table--border::after, .el-table--group::after, .el-table::before{
+  background-color: #ffffff;
+}
+.jx-row{
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  >div{
+    margin-right: 10px;
+  }
+  .jx-btn{
+    position: absolute;
+    right: 0;
+    .el-button{
+      padding: 12px 10px;
+    }
+  }
+}
 </style>

@@ -41,7 +41,7 @@
           >
             <template slot="title">
               <!-- 图标 -->
-              <i class="el-icon-location"/>
+              <i :class="item.icon"/>
               <!-- 文本 -->
               <span>{{ item.authName }}</span>
             </template>
@@ -53,7 +53,7 @@
                 @click="saveActive('/'+subItem.path)"
             >
               <template slot="title">
-                <i class="el-icon-menu"/>
+                <i :class="subItem.icon"/>
                 <span>{{ subItem.authName }}</span>
               </template>
             </el-menu-item>
@@ -72,7 +72,7 @@
       <span>您确定要退出吗！</span>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialog = false">取 消</el-button>
-    <el-button type="primary"  @click="logout">确 定</el-button>
+    <el-button type="primary" @click="logout">确 定</el-button>
   </span>
     </el-dialog>
   </el-container>
@@ -89,16 +89,29 @@ export default {
         {
           id: 1,
           authName: '用户管理',
-          children: [{id: 4, path: 'admin', authName: '管理员'}, {id: 11, path: 'users', authName: '普通用户'}]
+          icon: 'el-icon-user-solid', children: [
+            {id: 4,  path: 'admin', authName: '管理员',      icon: 'el-icon-user'},
+            {id: 11, path: 'users', authName: '普通用户',    icon: 'el-icon-user'}
+          ]
         },
-        {id: 2, authName: '商品管理', children: [{id: 5, path: 'goods', authName: '商品列表'}]},
-        {id: 3, authName: '订单管理', children: [{id: 6, path: 'order', authName: '订单列表'}]},
         {
-          id: 4, authName: '系统设置', children: [
-            {id: 7, path: 'goods_catagoreis', authName: '添加分类'},
-            {id: 8, path: 'factory_catagoreis', authName: '厂家列表'},
-            {id: 9, path: 'notice', authName: '更新公告'},
-            {id: 10, path: 'aboutus', authName: '关于我们'}]
+          id: 2,
+          authName: '商品管理',
+          icon: 'el-icon-s-goods',
+          children: [{id: 5, path: 'goods', authName: '商品列表', icon: 'el-icon-goods'}]
+        },
+        {
+          id: 3,
+          authName: '订单管理',
+          icon: 'el-icon-s-order',
+          children: [{id: 6, path: 'order', authName: '订单列表', icon: 'el-icon-s-order'}]
+        },
+        {
+          id: 4, authName: '系统设置', icon: 'el-icon-s-tools', children: [
+            {id: 7,  path: 'goods_catagoreis',    authName: '添加分类', icon: 'el-icon-star-off'},
+            {id: 8,  path: 'factory_catagoreis',  authName: '厂家列表', icon: 'el-icon-star-off'},
+            {id: 9,  path: 'notice',              authName: '更新公告', icon: 'el-icon-star-off'},
+            {id: 10, path: 'aboutus',             authName: '关于我们', icon: 'el-icon-star-off'}]
         }
       ],
       isCollapse: false,
@@ -177,7 +190,8 @@ export default {
 .home_container {
   height: 100%;
 }
-.avatar{
+
+.avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
